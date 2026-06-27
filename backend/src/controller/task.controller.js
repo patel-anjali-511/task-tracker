@@ -86,8 +86,8 @@ async function updateTask(req, res) {
         dueDate,
       },
       {
-        new: true,
-        runValidators: true,
+       returnDocument: "after",
+       runValidators: true,
       },
     );
     if (!task) {
