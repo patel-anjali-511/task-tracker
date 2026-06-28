@@ -11,6 +11,7 @@ const App = () => {
   const [toasts, setToasts] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTaskId, setDeletingTaskId] = useState(null);
+  const [fetchError, setFetchError] = useState(false);
 
   const addToast = (message, type = 'info') => {
     const id = Date.now().toString() + Math.random().toString(36).substring(2, 9);
@@ -24,10 +25,12 @@ const App = () => {
   const fetchTasks = useCallback(async () => {
     try {
       setLoading(true);
+      setFetchError(false);
       const res = await api.get("/tasks");
       setTasks(res.data.tasks || []);
     } catch (error) {
       console.error("Error fetching tasks:", error);
+      setFetchError(true);
       addToast("Failed to fetch tasks from the server.", "error");
     } finally {
       setLoading(false);
@@ -127,6 +130,21 @@ const App = () => {
                 <div className="loader-container">
                   <div className="spinner"></div>
                   <p>Fetching tasks...</p>
+                </div>
+              ) : fetchError ? (
+                <div className="empty-state">
+                  <div className="warning-icon-wrapper neobrutalist-warning-icon" style={{ margin: '0 auto 12px auto' }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                      <line x1="12" y1="9" x2="12" y2="13" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  </div>
+                  <h4>Server Connection Offline</h4>
+                  <p>Unable to connect to the database server. Please make sure the backend is running.</p>
+                  <button onClick={fetchTasks} className="btn btn-danger btn-sm" style={{ marginTop: '12px', cursor: 'pointer' }}>
+                    Retry Connection
+                  </button>
                 </div>
               ) : (
                 <TaskList 
