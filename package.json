@@ -8,5 +8,8 @@
     "build-frontend": "npm run build --prefix frontend",
     "start": "node backend/server.js",
     "build": "npm run install-all && npm run build-frontend"
+  },
+  "dependencies": {
+    "mongoose": "^9.7.3"
   }
 }
