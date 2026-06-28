@@ -5,6 +5,9 @@ function connectedToDb(){
   .then(()=>{
     console.log("connected to DB")
   })
+  .catch((err) => {
+    console.error("Could not connect to MongoDB:", err.message)
+  })
 }
 
 module.exports = connectedToDb
